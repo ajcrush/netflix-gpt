@@ -1,9 +1,65 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header";
+import { checkValidData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errMessage, setErrMessage] = useState(null);
+  const navigate = useNavigate();
+  const email = useRef(null);
+  const password = useRef(null);
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
+  };
+  const handleButtonClick = () => {
+    // Validate the form data
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrMessage(message);
+    if (message) return;
+    // Sign in sign up logic
+    if (!isSignInForm) {
+      //Sign up Logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/browse");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // Sign in logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          navigate("/browse");
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
   return (
     <div>
@@ -14,7 +70,10 @@ const Login = () => {
           alt="bg"
         />
       </div>
-      <form className="w-3/12 absolute bg-black p-12 my-36 mx-auto left-0 right-0 text-white rounded bg-opacity-80">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="w-3/12 absolute bg-black p-12 my-36 mx-auto left-0 right-0 text-white rounded bg-opacity-80"
+      >
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign in" : "Sign up"}
         </h1>
@@ -26,17 +85,23 @@ const Login = () => {
           />
         )}
         <input
+          ref={email}
           type="text"
           placeholder="Email Address"
           className="p-4 my-3 w-full bg-gray-500"
         />
 
         <input
+          ref={password}
           type="password"
           placeholder="password"
           className="p-4 my-3 w-full bg-gray-500 "
         />
-        <button className="p-4 my-4 bg-red-700 w-full">
+        <p className="text-red-500 font-bold text-lg py-2">{errMessage}</p>
+        <button
+          className="p-4 my-4 bg-red-700 w-full"
+          onClick={handleButtonClick}
+        >
           {isSignInForm ? "Sign in" : "Sign up"}
         </button>
         <p className="py-4 cursor-pointer" onClick={toggleSignInForm}>
