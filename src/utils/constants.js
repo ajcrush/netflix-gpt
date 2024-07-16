@@ -26,8 +26,5 @@ export const SUPPORTED_LANGUAGE = [
   { identifier: "hindi", name: "Hindi" },
   { identifier: "spanish", name: "Spanish" },
 ];
-<<<<<<< HEAD
-=======
 
 export const GROQ_KEY = process.env.REACT_APP_GROQ_KEY;
->>>>>>> 2b3f78e (Done)
