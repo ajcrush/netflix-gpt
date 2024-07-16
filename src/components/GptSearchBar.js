@@ -1,13 +1,24 @@
 import { useSelector } from "react-redux";
 import lang from "../utils/languageConstant";
 import { useRef } from "react";
+import groq from "../utils/groq";
 
 const GptSearchBar = () => {
   const langKey = useSelector((store) => store.config.lang);
   const searchText = useRef(null);
-  const handleGptSearchClick = () => {
+  const handleGptSearchClick = async () => {
     console.log(searchText.current.value);
     // Make an API call to groq api and get movie result
+    const result = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: "Explain the importance of fast language models",
+        },
+      ],
+      model: "llama3-8b-8192",
+    });
+    console.log(result.choices);
   };
   return (
     <div className="pt-[7%] flex justify-center">
