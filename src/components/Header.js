@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { addUser, removeUser } from "../utils/userSlice";
 import { LOGO } from "../utils/constants";
-import { toggleGptSearchView } from "../utils/gptSlice";
+import { addGptMovieResult, toggleGptSearchView } from "../utils/gptSlice";
 import { SUPPORTED_LANGUAGE } from "../utils/constants";
 import { changeLanguage } from "../utils/configSlice";
 const Header = () => {
@@ -48,6 +48,9 @@ const Header = () => {
   };
   const handleGptSearchClick = () => {
     // Toggle GPT Search
+    if (!showGptSearch) {
+      dispatch(addGptMovieResult({ movieNames: null, movieResults: null }));
+    }
     dispatch(toggleGptSearchView());
   };
   return (
