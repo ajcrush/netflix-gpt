@@ -36,6 +36,15 @@
 - Made the browse page amazing with tailwind css
 - usePopularMovies Custom hook
 - GPT search feature
+- MultiLanguage feature in our app
+- get Groq Ai API Key
+- Groq search API call
+- fetched groq movie suggestions from TMDB
+- Created GPT Slice added data
+- Reused movieList Component to make suggestion container
+- memoisation
+- Adding .env file
+- Made our Site Responsive
 
 # Features
 
